@@ -1,0 +1,11 @@
+body{
+	background-image: url("../img/BackgroundFarm.jpg");
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+#head{
+	width:100%;
+	height:7vh;
+	text-align:center;
+	font-size:22px;
+}
