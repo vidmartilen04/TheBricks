@@ -1,18 +1,18 @@
 <!doctype HTML>
 <html>
 <head>
-	<title>The Bricks</title>
+	<title>SCREAM The bricks</title>
 	<link rel="stylesheet" href="css/style.css">
-	<link rel="icon" type="image/png" href="img/favicon.ico">
+	<link rel="icon" type="image/png" href="img/ghostface.ico">
 </head>
 <body onload="drawIt()">
-	<div id="head">Farming Adventures</div><br>
+	<div id="head">SCREAM The Bricks</div><br>
 	<div id="gameField">
 		<canvas id="game" width="850" height="550"></canvas>
 		<script type="text/javascript">
 			function drawIt() {
-			var x = 150;
-			var y = 150;
+			var x = 300;
+			var y = 225;
 			var dx = 2;
 			var dy = 4;
 			var ctx;
@@ -25,10 +25,12 @@
 			function draw() {
 
 			ctx.clearRect(0,0,850,550);
-			ctx.beginPath();
-			ctx.arc(x, y, 10, 0, Math.PI*2, true);
-			ctx.closePath();
-			ctx.fill();
+			img = new Image();
+    		img.src = 'img/ballV3.png';
+			//ctx.beginPath();
+			ctx.drawImage(img, x, y);
+			//ctx.arc(x, y, 10, 0, Math.PI*2, true);
+			//ctx.closePath();
 			x += dx;
 			y += dy;
 			}
