@@ -4,6 +4,7 @@
 	<title>SCREAM The bricks</title>
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="icon" type="image/png" href="img/ghostface.ico">
+	<script src="https://code.jquery.com/jquery-3.6.3.js"></script>
 </head>
 <body onload="drawIt()">
 	<div id="head">SCREAM The Bricks</div><br>
@@ -18,22 +19,62 @@
 			var r= 35;
 			var ctx;
 			var canvas;
+
 			var paddlex;
 			var paddleh;
 			var paddlew;
-			var rightDown = false;
-			var leftDown = false;
-
 
 			function init_paddle() {
 			  paddlex = 850 / 2;
 			  paddleh = 15;
-			  paddlew = 80;
+			  paddlew = 90;
 			}
 			function init() {
 			canvas=document.getElementById("game");
 			ctx = canvas.getContext('2d');
-			return setInterval(draw, 20); //klic funkcije draw vsakih 10 ms; http://www.w3schools.com/jsref/met_win_setinterval.asp
+			return setInterval(draw, 18); //klic funkcije draw vsakih 10 ms; http://www.w3schools.com/jsref/met_win_setinterval.asp
+			}
+
+			
+			var rightDown = false;
+			var leftDown = false;
+			
+			function onKeyDown(evt) {
+			  if (evt.keyCode == 39)
+				rightDown = true;
+			  else if (evt.keyCode == 37) 
+			  	leftDown = true;
+			}
+			
+			function onKeyUp(evt) {
+			  if (evt.keyCode == 39)
+			rightDown = false;
+			  else if (evt.keyCode == 37) 
+			  	leftDown = false;
+			}
+			$(document).keydown(onKeyDown);
+			$(document).keyup(onKeyUp); 
+
+			var bricks;
+			var NROWS;
+			var NCOLS;
+			var BRICKWIDTH;
+			var BRICKHEIGHT;
+			var PADDING;
+
+			function initbricks() { //inicializacija opek - polnjenje v tabelo
+			  NROWS = 5;
+			  NCOLS = 5;
+			  BRICKWIDTH = (WIDTH/NCOLS) - 1;
+			  BRICKHEIGHT = 15;
+			  PADDING = 1;
+			  bricks = new Array(NROWS);
+			  for (i=0; i < NROWS; i++) {
+			    bricks[i] = new Array(NCOLS);
+			    for (j=0; j < NCOLS; j++) {
+			      bricks[i][j] = 1;
+			    }
+			  }
 			}
 
 			function draw() {
@@ -43,8 +84,6 @@
     		img.src = 'img/GFBallV4.png';
 			
 			ctx.drawImage(img, x, y);
-			if (rightDown) paddlex += 5;
-  			else if (leftDown) paddlex -= 5;
 			ctx.rect(paddlex, 550-paddleh, paddlew, paddleh);
 			ctx.fill();
 			ctx.stroke();
@@ -61,9 +100,27 @@
 
   				x += dx;
  			    y += dy;
+
+ 			    if (rightDown) paddlex += 5;
+ 				else if (leftDown) paddlex -= 5;
+  				ctx.rect(paddlex, 550-paddleh, paddlew, paddleh);
+  				ctx.fill();
+				ctx.stroke();
+				  if (x + dx > 850 -r || x + dx < 0 +r)
+				    dx = -dx;
+				  if (y + dy < 0 +r)
+				    dy = -dy;
+				  else if (y + dy > 550 -r+paddleh) {
+				    if (x > paddlex && x < paddlex + paddlew)
+				      dy = -dy;
+				    else if (y + dy > 550 -r)
+				      clearInterval(intervalId);
+				  }
+				
 			}
 			init();
 			init_paddle();
+			initbricks();
 			}
 			
 		</script>
