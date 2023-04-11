@@ -29,6 +29,7 @@ body{
     left: 0;
     right: 0;
 	border: 2px solid #D3D3D3;
+	background-color: #D3D3D3;
 	box-shadow: 10px 10px 10px 10px rgba(133, 1, 1, 0.4);
 
 }
