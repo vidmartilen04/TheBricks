@@ -5,8 +5,24 @@
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="icon" type="image/png" href="img/ghostface.ico">
 	<script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="sweetalert2.min.js"></script>
+	<link rel="stylesheet" href="sweetalert2.min.css">
 </head>
-<body onload="drawIt()">
+<body onload="start()">
+	<script>
+		function start(){
+			Swal.fire({
+			  title: 'SCREAM The Bricks',
+			  confirmButtonText: 'Play',
+			}).then((result) => {
+			  /* Read more about isConfirmed, isDenied below */
+			  if (result.isConfirmed) {
+				drawIt();
+			  }
+			})
+		}
+	</script>
 	<div id="head">SCREAM The Bricks</div><br>
 	<div id="gameField">
 		<canvas id="game" width="850" height="550"></canvas>
@@ -32,7 +48,7 @@
 			function init() {
 			canvas=document.getElementById("game");
 			ctx = canvas.getContext('2d');
-			return setInterval(draw, 18); //klic funkcije draw vsakih 10 ms; http://www.w3schools.com/jsref/met_win_setinterval.asp
+			return setInterval(draw, 12); //klic funkcije draw vsakih 10 ms; http://www.w3schools.com/jsref/met_win_setinterval.asp
 			}
 
 			
@@ -63,7 +79,7 @@
 			var PADDING;
 
 			function initbricks() { //inicializacija opek - polnjenje v tabelo
-			  NROWS = 5;
+			  NROWS = 6;
 			  NCOLS = 5;
 			  BRICKWIDTH = (WIDTH/NCOLS) - 1;
 			  BRICKHEIGHT = 15;
@@ -80,13 +96,17 @@
 			function draw() {
 			ctx.beginPath();
 			ctx.clearRect(0,0,850,550);
+			
+			//Slika za Brickse
 			img = new Image();
     		img.src = 'img/GFBallV4.png';
-			
 			ctx.drawImage(img, x, y);
+			
+			//Plošček
 			ctx.rect(paddlex, 550-paddleh, paddlew, paddleh);
 			ctx.fill();
 			ctx.stroke();
+			
 			if (x + dx > 850-r || x + dx < 0+r)
     			dx = -dx;
 			if (y + dy < 0+r)
@@ -116,7 +136,7 @@
 				    else if (y + dy > 550 -r)
 				      clearInterval(intervalId);
 				  }
-				
+				 	
 			}
 			init();
 			init_paddle();

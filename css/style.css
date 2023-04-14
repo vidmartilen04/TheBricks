@@ -1,5 +1,5 @@
 body{
-	background-image: url("../img/NewYork.jpg");
+	background-image: url("../img/bgBricks.jpg");
 	background-repeat: no-repeat;
 	background-size: cover;
 	font-family: "Futura";
@@ -8,7 +8,7 @@ body{
 	width:100%;
 	height:5vh;
 	text-align:center;
-	font-size:36px;
+	font-size:42px;
 	text-shadow: 2px 2px #850101;
 	color: #D3D3D3;
 	font-weight: bolder;
