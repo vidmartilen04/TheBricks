@@ -11,6 +11,11 @@
 </head>
 <body onload="start()">
 	<audio id="brickSmash"><source src="sound/brickSmash.mp3"></audio>
+	<audio id="sound1"><source src="sound/0to10.mp3"></audio>
+	<audio id="sound2"><source src="sound/10to20.mp3"></audio>
+	<audio id="sound3"><source src="sound/20to30.mp3"></audio>
+	<audio id="sound4"><source src="sound/30to40.mp3"></audio>
+
 	<script>
 		function start(){
 			Swal.fire({
@@ -27,20 +32,75 @@
 			  /* Read more about isConfirmed, isDenied below */
 			  if (result.isConfirmed) {
 				drawIt();
+				beginSound.play();
+				beginSound.loop();
 			  }
 			})
 		}
 	</script>
-	<div id="head">SCREAM The Bricks</div><br>
+	<div id="head">SCREAM The Bricks</div>
+	<br>
+	<br>
+	<br>
+	<br>
 	<div id="gameField">
 		<canvas id="game" width="850" height="550"></canvas>
 		<script type="text/javascript">
+			var beginSound=document.getElementById("sound1"); 
+			
+			function endGame(){
+				sound1.pause();
+				sound2.pause();
+		    	sound3.pause();
+				sound4.pause();
+
+			  Swal.fire({
+			  title: 'GAME OVER',
+			  text: 'You did not make it! \n Try again?',
+			  color:'black',
+			  background:'#D3D3D3',
+			  confirmButtonColor: 'rgb(133, 1, 1)',
+			  confirmButtonText: 'Try Again',
+			  backdrop: `
+				rgba(133, 1, 1,0.4)
+			  `
+			}).then((result) => {
+			  /* Read more about isConfirmed, isDenied below */
+			  if (result.isConfirmed) {
+				location.reload(); 
+			  }
+			})
+			}
+			function finish(){
+				sound1.pause();
+			    sound2.pause();
+				sound3.pause();
+				sound4.pause();
+
+			  Swal.fire({
+			  title: 'Gongrats',
+			  text: 'You have escaped Ghostface',
+			  color:'black',
+			  background:'#D3D3D3',
+			  confirmButtonColor: 'rgb(133, 1, 1)',
+			  confirmButtonText: 'Play',
+			  backdrop: `
+				rgba(133, 1, 1,0.4)
+			  `
+			}).then((result) => {
+			  /* Read more about isConfirmed, isDenied below */
+			  if (result.isConfirmed) {
+				location.reload(); 
+			  }
+			})
+			}
 			function drawIt() {
-			var x = 300;
-			var y = 225;
+
+			var x = 250;
+			var y = 250;
 			var dx = 2;
 			var dy = 4;
-			var r= 35;
+			var r= 10;
 			var ctx;
 			var canvas;
 			var points;
@@ -50,20 +110,23 @@
 			var paddlew;
 			
 			var smshB=document.getElementById("brickSmash"); 
+			var lvl1=document.getElementById("sound2"); 
+			var lvl2=document.getElementById("sound3"); 
+			var lvl3=document.getElementById("sound4"); 
 
 
 			function init_paddle() {
 			  paddlex = 850 / 2;
 			  paddleh = 20;
-			  paddlew = 100;
+			  paddlew = 130;
 			}
+
 			function init() {
 			canvas=document.getElementById("game");
 			ctx = canvas.getContext('2d');
 			return setInterval(draw, 12); 
 			}
 
-			
 			var rightDown = false;
 			var leftDown = false;
 			
@@ -89,17 +152,25 @@
 			var BRICKWIDTH;
 			var BRICKHEIGHT;
 			var PADDING;
+
 			var rowheight;
 			var colheight;
+
 			var row;
 			var col;
 
+			var tocke;
+			tocke = 0;
+			$("#tocke").html(tocke);
+
+
 			function initbricks() { //inicializacija opek - polnjenje v tabelo
-			  NROWS = 7;
+			  NROWS = 8;
 			  NCOLS = 5;
-			  BRICKWIDTH = (850/NCOLS) - 5.5;
+			  BRICKWIDTH = (850/NCOLS) - 6.5;
 			  BRICKHEIGHT = 15;
-			  PADDING = 5;
+			  PADDING = 6;
+
 			  bricks = new Array(NROWS);
 			  for (i=0; i < NROWS; i++) {
 			    bricks[i] = new Array(NCOLS);
@@ -127,7 +198,8 @@
 			for (i=0; i < NROWS; i++) {
 				for (j=0; j < NCOLS; j++) {
 					if (bricks[i][j] == 1) {
-						ctx.rect(j * (BRICKWIDTH + PADDING) + PADDING, i * (BRICKHEIGHT + PADDING) + PADDING,BRICKWIDTH, BRICKHEIGHT);
+						ctx.rect((j * (BRICKWIDTH + PADDING)) + PADDING, i * (BRICKHEIGHT + PADDING) + PADDING,BRICKWIDTH, BRICKHEIGHT);
+						ctx.fillStyle = '#919191';
 						ctx.fill();
 						ctx.stroke();
 					}
@@ -135,32 +207,71 @@
 			}
 			
 			  rowheight = BRICKHEIGHT + PADDING; //Smo zadeli opeko?
-			  colwidth = BRICKWIDTH + PADDING;
+			  colwidth = BRICKWIDTH + PADDING;	
 		      row = Math.floor(y/rowheight);
               col = Math.floor(x/colwidth);
+
 			//Če smo zadeli opeko, vrni povratno kroglo in označi v tabeli, da opeke ni več
-			if (y < NROWS * rowheight && row >= 0 && col >= 0 && bricks[row][col] == 1) {
+			if (y < NROWS * rowheight && row+1 >= 0 && col >= 0 && bricks[row][col] == 1) {
 			    smshB.play();
 				dy = -dy; 
 				bricks[row][col] = 0;
-			} 
-						
-			if (x + dx > 850 || x + dx < 0+4)
+
+				tocke=tocke+1;
+				$("#tocke").html(tocke);
+				if (tocke==10) {
+					sound1.pause();
+					sound2.play();
+					sound2.loop();
+				} 
+				else if (tocke==20) {
+					sound2.pause();
+					sound3.play();
+					sound3.loop();
+				} 
+				else if (tocke==30) {
+					sound3.pause();
+					sound4.play();
+					sound4.loop();
+			}
+				else if(tocke==40){
+				sound4.pause();
+				finish();
+				}
+		}
+			
+				
+			if (x + dx > 850-r || x + dx < 0+r)
     			dx = -dx;
 			if (y + dy < 0+r)
     			dy = -dy;
-  			else if (y + dy > 550-r) {
+  			else if (y + dy > 550-(r+paddleh)) {
     			if (x > paddlex && x < paddlex + paddlew)
       				dy = -dy;
     			else
      				clearInterval(intervalId);
+					
   				}
 
   				x += dx;
  			    y += dy;
 
- 			    if (rightDown) paddlex += 5;
- 				else if (leftDown) paddlex -= 5;
+ 			    if(rightDown){
+					if((paddlex+paddlew) < 850){
+					paddlex += 5;
+					}
+					else{
+						paddlex = 850-paddlew;
+						}
+						}
+					else if(leftDown){
+					if(paddlex>0){
+					paddlex -=5;
+					}else{
+					paddlex=0;
+					}
+					}
+					
   				ctx.rect(paddlex, 550-paddleh, paddlew, paddleh);
   				ctx.fill();
 				ctx.stroke();
@@ -168,11 +279,13 @@
 				    dx = -dx;
 				  if (y + dy < 0 +r)
 				    dy = -dy;
-				  else if (y + dy > 550 -r+paddleh) {
+				  else if (y + dy > 550 -(r+paddleh)) {
 				    if (x > paddlex && x < paddlex + paddlew)
 				      dy = -dy;
 				    else if (y + dy > 550 -r)
 				      clearInterval(intervalId);
+					else
+					  endGame();
 				  }
 				 	
 			}
@@ -180,8 +293,14 @@
 			init_paddle();
 			initbricks();
 			}
-			
 		</script>
+		<br>
+		<br>
+		<div id="controls">
+			<div id="Points">Stabs: <mark id="tocke">0</mark></div>
+			<!--<button id="butts" onclick="resetGame()">Play Again</button>-->
+		</div>
 	</div>
+	
 </body>
 </html>
